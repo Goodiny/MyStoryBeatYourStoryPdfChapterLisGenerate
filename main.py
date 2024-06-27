@@ -1,4 +1,4 @@
-from pprint import pprint
+#/usr/local/bin/python3.12
 
 import fitz  # PyMuPDF
 
@@ -15,7 +15,8 @@ def is_title_or_subtitle(size, flags, text):
 
     # Проверяем, является ли текст заголовком или подзаголовком
     if ((size in chapter_sizes or (size == subchapter_size and flags in subchapter_flags)) and
-            (text.strip().isupper() or size == 17.0 or text == " " or text.strip() in {":", "?", "!", ",", ".", "... (", "!)"} or
+            (text.strip().isupper() or size == 17.0 or text == " " or text.strip() in {":", "?", "!", ",", ".", "... (",
+                                                                                       "!)"} or
              (len(text.strip()) > 0 and text.strip()[0].isnumeric()))):
         return True
     return False
@@ -75,7 +76,8 @@ def extract_chapters(pdf_path):
                         #     print(line_indent, line_upper, line_numeric)
                         #     print(text)
 
-                        if (is_title_or_subtitle(size, flags, text) and ((same_line and len(line["spans"]) == 1) or not line_indent) and
+                        if (is_title_or_subtitle(size, flags, text) and (
+                                (same_line and len(line["spans"]) == 1) or not line_indent) and
                                 (line_upper or line_numeric or size == 17.0)):
                             if current_level is None:
                                 current_level = 1 if size in {14, 17} else 2
@@ -127,7 +129,6 @@ def create_toc(pdf_path, output_path, toc_entries):
     doc.set_toc(toc)
     doc.save(output_path)
     print(f"PDF with TOC saved as: {output_path}")
-
 
 
 if __name__ == "__main__":
