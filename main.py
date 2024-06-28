@@ -95,7 +95,7 @@ def extract_chapters(pdf_path):
                                                  replace("( ", "(").
                                                  replace("  ", " "))
                                 chapters.append((current_level, current_title.strip(), current_page))
-                                print((current_level, current_title.strip(), current_page))
+                                # print((current_level, current_title.strip(), current_page))
                                 current_title = ""
                                 current_level = None
                                 current_page = None
@@ -104,7 +104,7 @@ def extract_chapters(pdf_path):
 
     if current_title:
         chapters.append((current_level, current_title.strip(), current_page))
-        print((current_level, current_title.strip(), current_page))
+        # print((current_level, current_title.strip(), current_page))
 
     return chapters
 
