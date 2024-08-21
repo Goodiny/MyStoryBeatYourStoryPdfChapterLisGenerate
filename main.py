@@ -108,7 +108,10 @@ def extract_chapters(pdf_path: str):
                         else:
                             same_line = True
 
-                        if is_title_or_subtitle(size, flags, text, font, spans_count, same_line, *check_line(line)):
+                        if is_title_or_subtitle(size, flags, text, font,
+                                                spans_count,
+                                                same_line,
+                                                *check_line(line)):
                             if current_level is None:
                                 current_level = 1 if size in {14, 17} else 2
                                 current_page = page_num + 1
