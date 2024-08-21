@@ -1,4 +1,4 @@
-#/usr/local/bin/python3.12
+#!/usr/local/bin/python3.12
 from __future__ import annotations
 
 import fitz  # PyMuPDF
@@ -53,14 +53,14 @@ def is_title_or_subtitle(size: float,
     # Проверяем, является ли текст заголовком или подзаголовком
     if (
             ("bold" in font.lower() and (size in chapter_sizes or
-              (size == subchapter_size and flags in subchapter_flags))
+                                         (size == subchapter_size and flags in subchapter_flags))
             ) and
             (
-                text.strip().isupper() or
-                size == 17.0 or # когда заголовок не заглавными, но 17 кеглем
-                text == " " or  # когда в заголовке пробел как отдельный span
-                text.strip() in {":", "?", "!", ",", ".", "... (", "!)", "..."} or
-                (len(text.strip()) > 0 and text.strip()[0].isnumeric())
+                    text.strip().isupper() or
+                    size == 17.0 or  # когда заголовок не заглавными, но 17 кеглем
+                    text == " " or  # когда в заголовке пробел как отдельный span
+                    text.strip() in {":", "?", "!", ",", ".", "... (", "!)", "..."} or
+                    (len(text.strip()) > 0 and text.strip()[0].isnumeric())
             ) and
             is_complex_line(same_line, spans_count, line_indent) and
             is_upper_numeric(line_upper, line_numeric, size)
