@@ -40,6 +40,7 @@ def check_line(line: dict) -> tuple[bool, bool, bool]:
 def is_title_or_subtitle(size: float,
                          flags: int,
                          text: str,
+                         font: str,
                          spans_count: int,
                          same_line: bool,
                          line_indent: bool,
@@ -50,16 +51,19 @@ def is_title_or_subtitle(size: float,
     subchapter_flags = {16, 20}
 
     # Проверяем, является ли текст заголовком или подзаголовком
-    if ((size in chapter_sizes or (size == subchapter_size and flags in subchapter_flags)) and
-        (
-            text.strip().isupper() or
-            size == 17.0 or
-            # text == " " or
-            text.strip() in {":", "?", "!", ",", ".", "... (", "!)"} or
-            (len(text.strip()) > 0 and text.strip()[0].isnumeric())
-        ) and
-        is_complex_line(same_line, spans_count, line_indent) and
-        is_upper_numeric(line_upper, line_numeric, size)
+    if (
+            ("bold" in font.lower() and (size in chapter_sizes or
+              (size == subchapter_size and flags in subchapter_flags))
+            ) and
+            (
+                text.strip().isupper() or
+                size == 17.0 or # когда заголовок не заглавными, но 17 кеглем
+                text == " " or  # когда в заголовке пробел как отдельный span
+                text.strip() in {":", "?", "!", ",", ".", "... (", "!)", "..."} or
+                (len(text.strip()) > 0 and text.strip()[0].isnumeric())
+            ) and
+            is_complex_line(same_line, spans_count, line_indent) and
+            is_upper_numeric(line_upper, line_numeric, size)
     ):
         return True
     return False
@@ -94,6 +98,7 @@ def extract_chapters(pdf_path: str):
                         text = span["text"]
                         size = span["size"]
                         flags = span["flags"]
+                        font = span['font']
                         origin = span["origin"]
                         spans_count = len(line['spans'])
 
@@ -103,7 +108,7 @@ def extract_chapters(pdf_path: str):
                         else:
                             same_line = True
 
-                        if is_title_or_subtitle(size, flags, text, spans_count, same_line, *check_line(line)):
+                        if is_title_or_subtitle(size, flags, text, font, spans_count, same_line, *check_line(line)):
                             if current_level is None:
                                 current_level = 1 if size in {14, 17} else 2
                                 current_page = page_num + 1
